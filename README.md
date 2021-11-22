@@ -5,3 +5,5 @@ Using:
 - .Net 5 Web API
 - React with TypeScript
 - Material UI
+- React Router
+- Axios

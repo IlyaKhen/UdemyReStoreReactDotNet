@@ -36,16 +36,12 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
                 <Box display='flex' alignItems='center'>
-                    <Typography variant='h6'
-                        component={NavLink}
-                        to='/'
-                        sx={navStyles}
-                    >
+                <Typography variant='h6' component={NavLink} exact to='/'
+                        sx={navStyles}>
                         RE-STORE
                     </Typography>
                     <Switch checked={darkMode} onChange={handleThemeChange} />
                 </Box>
-
 
                 <List sx={{ display: 'flex' }}>
                     {midLinks.map(({ title, path }) => (

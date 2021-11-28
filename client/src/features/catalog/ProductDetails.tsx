@@ -3,16 +3,22 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
+import { useStoreContext } from "../../app/context/StoreContext";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { Product } from "../../app/models/product";
+import { currencyFormat } from "../../app/util/util";
 
 export default function ProductDetails() {
+    const {basket} = useStoreContext();
     const { id } = useParams() as {
         id: string;
     };
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
+    const [quantity, setQuantity] = useState(0);
+    const [submittung, setSubmitting] = useState(false);
+    const item = basket?.items.find(i => i.productId === product?.id);
 
     useEffect(() => {
         agent.Catalog.details(parseInt(id))
@@ -33,7 +39,7 @@ export default function ProductDetails() {
             <Grid item xs={6}>
                 <Typography variant='h3'>{product.name}</Typography>
                 <Divider sx={{mb: 2}} />
-                <Typography variant='h4' color='secondary'>{'$' + (product.price / 100).toFixed(2)}</Typography>
+                <Typography variant='h4' color='secondary'>{currencyFormat(product.price)}</Typography>
                 <TableContainer>
                     <Table>
                         <TableBody>

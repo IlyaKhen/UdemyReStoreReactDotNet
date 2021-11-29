@@ -1,6 +1,8 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { Basket } from "../models/basket";
 
+//old code file of context, replaced by redux. now we don't need it
+
 interface StoreContextValue {
     basket: Basket | null;
     setBasket: (basket: Basket) => void;

@@ -10,4 +10,3 @@ Using:
 - Redux
 - React-redux
 - Redux Toolkit
-- Redux Thunk

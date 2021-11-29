@@ -7,3 +7,6 @@ Using:
 - Material UI
 - React Router
 - Axios
+- Redux
+- React-redux
+- Redux Toolkit

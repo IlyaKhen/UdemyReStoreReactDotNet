@@ -43,15 +43,16 @@ axios.interceptors.response.use(async responce => { //adding async for sleep fun
 })
 
 const requests = {
-    get: (url: string) => axios.get(url).then(responceBody),
+    get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responceBody),
     post: (url: string, body: {}) => axios.post(url).then(responceBody),
     put: (url: string, body: {}) => axios.put(url).then(responceBody),
     delete: (url: string) => axios.delete(url).then(responceBody),
 }
 
 const Catalog = {
-    list: () => requests.get('products'),
-    details: (id: number) => requests.get(`products/${id}`)
+    list: (params: URLSearchParams) => requests.get('products', params),
+    details: (id: number) => requests.get(`products/${id}`),
+    fetchFilters: () => requests.get('products/filters')
 }
 
 const TestErrors = {

@@ -1,5 +1,6 @@
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Pagination, Paper, Radio, RadioGroup, Typography } from "@mui/material";
+import { Box, Grid, Pagination, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
+import AppPagination from "../../app/components/AppPagination";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import LoadingComponent from "../../app/layout/LoadingComponent";
@@ -19,7 +20,7 @@ const sortOptions = [
 export default function Catalog() {
 
     const products = useAppSelector(productSelectors.selectAll);
-    const { productsLoaded, status, filtersLoaded, brands, types, productParams } = useAppSelector(state => state.catalog);
+    const { productsLoaded, status, filtersLoaded, brands, types, productParams, metaData } = useAppSelector(state => state.catalog);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export default function Catalog() {
         if (!filtersLoaded) dispatch(fetchFilters());
     }, [filtersLoaded, dispatch])
 
-    if (status.includes('pending')) return <LoadingComponent message='Loading products...' />
+    if (status.includes('pending') || !metaData) return <LoadingComponent message='Loading products...' />
 
     return (
         <Grid container spacing={4}>
@@ -64,12 +65,10 @@ export default function Catalog() {
             </Grid>
             <Grid item xs={3} />
             <Grid item xs={9} >
-                <Box display='flex' justifyContent='space-between' alignItems='center'>
-                    <Typography>
-                        Displaying 1-6 of 20 items
-                    </Typography>
-                    <Pagination color='secondary' size='large' count={10} page={2} />
-                </Box>
+                <AppPagination
+                    metaData={metaData}
+                    onPageChange={(page: number) => dispatch(setProductParams({ pageNumber: page }))}
+                />
             </Grid>
         </Grid>
     )

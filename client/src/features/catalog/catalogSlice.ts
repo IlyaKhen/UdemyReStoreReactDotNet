@@ -1,5 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import agent from "../../app/api/agent";
+import { MetaData } from "../../app/models/pagination";
 import { Product, ProductParams } from "../../app/models/product";
 import { RootState } from "../../app/store/configureStore";
 
@@ -11,6 +12,7 @@ interface CatalogState {
     brands: string[];
     types: string[];
     productParams: ProductParams;
+    metaData: MetaData | null;
 }
 
 const productsAdapter = createEntityAdapter<Product>();
@@ -35,7 +37,9 @@ export const fetchProductsAsync = createAsyncThunk<Product[], void, {state: Root
     async (_, thunkAPI) => { //here we need first argument, so use _ for non-existing argument
         const params = getAxiosParams(thunkAPI.getState().catalog.productParams);
         try {
-            return await agent.Catalog.list(params);
+            const responce = await agent.Catalog.list(params);
+            thunkAPI.dispatch(setMetaData(responce.metaData));
+            return responce.items;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data });
         }
@@ -81,13 +85,17 @@ export const catalogSlice = createSlice({
         status: 'idle',
         brands: [],
         types: [],
-        productParams: initParams()
+        productParams: initParams(),
+        metaData: null
     }),
 
     reducers: {
         setProductParams: (state, action) => {
             state.productsLoaded = false;
             state.productParams = { ...state.productParams, ...action.payload };
+        },
+        setMetaData: (state, action) => {
+            state.metaData = action.payload;
         },
         resetProductParams: (state) => {
             state.productParams = initParams();
@@ -136,4 +144,4 @@ export const catalogSlice = createSlice({
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.catalog);
 
-export const { setProductParams, resetProductParams } = catalogSlice.actions;
+export const { setProductParams, resetProductParams, setMetaData } = catalogSlice.actions;

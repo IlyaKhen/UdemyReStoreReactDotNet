@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
+import { PaginatedResponce } from "../models/pagination";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500)); //just for demonstrate spinner loading
 
@@ -11,6 +12,11 @@ const responceBody = (responce: AxiosResponse) => responce.data;
 
 axios.interceptors.response.use(async responce => { //adding async for sleep function
     await sleep();
+    const pagination = responce.headers['pagination'];
+    if(pagination) {
+        responce.data = new PaginatedResponce(responce.data, JSON.parse(pagination));
+        return responce;
+    }
     return responce
 }, (error: AxiosError) => {
     const { data, status } = error.response!; // ! - override, thats turn off type safety for typescript. If we get into this part of code, this means that an error is exist.

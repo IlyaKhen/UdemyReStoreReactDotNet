@@ -50,8 +50,8 @@ axios.interceptors.response.use(async responce => { //adding async for sleep fun
 
 const requests = {
     get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responceBody),
-    post: (url: string, body: {}) => axios.post(url).then(responceBody),
-    put: (url: string, body: {}) => axios.put(url).then(responceBody),
+    post: (url: string, body: {}) => axios.post(url, body).then(responceBody),
+    put: (url: string, body: {}) => axios.put(url, body).then(responceBody),
     delete: (url: string) => axios.delete(url).then(responceBody),
 }
 
@@ -75,10 +75,17 @@ const Basket = {
     removeItem: (productId: number, quantity = 1) => requests.delete(`basket?productId=${productId}&quantity=${quantity}`)
 }
 
+const Account = {
+    login: (values: any) => requests.post('account/login', values),
+    register: (values: any) => requests.post('account/register', values),
+    currentUser: () => requests.get('account/currentUser'),
+}
+
 const agent = {
     Catalog,
     TestErrors,
-    Basket
+    Basket,
+    Account
 }
 
 export default agent;

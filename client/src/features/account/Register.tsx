@@ -15,7 +15,7 @@ import { toast } from 'react-toastify';
 
 export default function Register() {
     const history = useHistory();
-    const [validationErrors, setValidationErrors] = useState([]);
+    const [validationErrors ] = useState([]);
     const { register, handleSubmit, setError, formState: { isSubmitting, errors, isValid } } = useForm({
         mode: 'all'
     });

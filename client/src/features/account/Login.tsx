@@ -20,8 +20,12 @@ export default function Login() {
     });
 
     async function submitForm(data: FieldValues) {
-        await dispatch(signInUser(data));
-        history.push('/catalog');
+        try {
+            await dispatch(signInUser(data));
+            history.push('/catalog');
+        } catch(error) {
+            console.log(error);
+        }
     }
     return (
         <Container component={Paper} maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 4 }}>

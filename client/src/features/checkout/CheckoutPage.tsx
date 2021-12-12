@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Step, StepLabel, Stepper, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
@@ -33,10 +33,20 @@ export default function CheckoutPage() {
     const dispatch = useAppDispatch();
 
     const currentValidationSchema = validationScheme[activeStep];
+
     const methods = useForm({
         mode: 'all',
         resolver: yupResolver(currentValidationSchema)
     });
+
+    useEffect(() => {
+        agent.Account.fetchAddress()
+        .then(response => {
+            if(response) {
+                methods.reset({...methods.getValues(), ...response, saveAddress: false})
+            }
+        })
+    }, [methods])
 
     const handleNext = async (data: FieldValues) => {
         const { nameOnCatd, saveAddress, ...shippingAddress } = data;

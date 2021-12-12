@@ -15,7 +15,7 @@ export default function PaymentForm() {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-        <AppTextInput control={control} name='namOnCard' label='Name on card' />
+        <AppTextInput control={control} name='nameOnCard' label='Name on card' />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField

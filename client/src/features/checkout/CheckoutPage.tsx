@@ -6,6 +6,10 @@ import PaymentForm from "./PaymentForm";
 import Review from "./Review";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validationScheme } from "./checkoutValidation";
+import agent from "../../app/api/agent";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { clearBasket } from "../basket/basketSlice";
+import { LoadingButton } from "@mui/lab";
 
 const steps = ['Shipping address', 'Review your order', 'Payment details'];
 
@@ -23,15 +27,33 @@ function getStepContent(step: number) {
 }
 
 export default function CheckoutPage() {
+    const [activeStep, setActiveStep] = useState(0);
+    const [orderNumber, setOrderNumber] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const dispatch = useAppDispatch();
+
+    const currentValidationSchema = validationScheme[activeStep];
     const methods = useForm({
         mode: 'all',
-        resolver: yupResolver(validationScheme)
+        resolver: yupResolver(currentValidationSchema)
     });
-    const [activeStep, setActiveStep] = useState(0);
 
-    const handleNext = (data: FieldValues) => {
-        if(activeStep === 0){
-            console.log(data)
+    const handleNext = async (data: FieldValues) => {
+        const { nameOnCatd, saveAddress, ...shippingAddress } = data;
+        if (activeStep === steps.length - 1) {
+            setLoading(true);
+            try {
+                const orderNumber = await agent.Orders.create({ saveAddress, shippingAddress });
+                setOrderNumber(orderNumber);
+                setActiveStep(activeStep + 1);
+                dispatch(clearBasket());
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+                setLoading(false);
+            }
+        } else {
+            setActiveStep(activeStep + 1);
         }
         setActiveStep(activeStep + 1);
     };
@@ -60,9 +82,9 @@ export default function CheckoutPage() {
                                 Thank you for your order.
                             </Typography>
                             <Typography variant="subtitle1">
-                                Your order number is #2001539. We have emailed your order
-                                confirmation, and will send you an update when your order has
-                                shipped.
+                                Your order number is #{orderNumber}. We have not emailed your order
+                                confirmation, and will not send you an update when your order has
+                                shipped as this is a fake store.
                             </Typography>
                         </>
                     ) : (
@@ -74,14 +96,15 @@ export default function CheckoutPage() {
                                         Back
                                     </Button>
                                 )}
-                                <Button
-                                disabled={!methods.formState.isValid}
+                                <LoadingButton
+                                    loading={loading}
+                                    disabled={!methods.formState.isValid}
                                     variant="contained"
                                     type='submit'
                                     sx={{ mt: 3, ml: 1 }}
                                 >
                                     {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                                </Button>
+                                </LoadingButton>
                             </Box>
                         </form>
                     )}

@@ -10,6 +10,9 @@ namespace API.Entities
         public int Id { get; set; }
         public string BuyerId { get; set; }
         public List<BasketItem> Items { get; set; } = new();
+        public string PaymentIntentId { get; set; }
+        public string ClientSecret { get; set; }
+
         public void AddItem(Product product, int quantity)
         {
             if (Items.All(x => x.ProductId != product.Id))
@@ -17,17 +20,17 @@ namespace API.Entities
                 Items.Add(new BasketItem { Product = product, Quantity = quantity });
             }
 
-            var existingItem = Items.FirstOrDefault( x => x.ProductId == product.Id);
-            if(existingItem != null) existingItem.Quantity += quantity;
+            var existingItem = Items.FirstOrDefault(x => x.ProductId == product.Id);
+            if (existingItem != null) existingItem.Quantity += quantity;
 
         }
 
-        public void RemoveItem(int productId,int quantity)
+        public void RemoveItem(int productId, int quantity)
         {
             var item = Items.FirstOrDefault(x => x.ProductId == productId);
-            if(item == null) return;
+            if (item == null) return;
             item.Quantity -= quantity;
-            if(item.Quantity <= 0) Items.Remove(item);
+            if (item.Quantity <= 0) Items.Remove(item);
         }
     }
 }

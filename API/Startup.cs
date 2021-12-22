@@ -94,7 +94,13 @@ namespace API
                 });
 
 
-            services.AddAuthorization();
+            //services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("type", "Admin"));
+                options.AddPolicy("Member", policy => policy.RequireClaim("type", "Member"));
+
+            });
             services.AddScoped<TokenService>();
         }
 

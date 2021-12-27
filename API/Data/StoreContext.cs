@@ -20,7 +20,7 @@ namespace API.Data
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<Order> Orders { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder) //method from IdentityDbContext
+        protected override void OnModelCreating(ModelBuilder builder) //method from IdentityDbContext, DbContext
         {
             base.OnModelCreating(builder);
 

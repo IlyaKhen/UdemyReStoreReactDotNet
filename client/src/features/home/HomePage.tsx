@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import Slider from 'react-slick';
 
-export default function AboutPage() {
+export default function HomePage() {
     const settings = {
         dots: true,
         infinite: true,

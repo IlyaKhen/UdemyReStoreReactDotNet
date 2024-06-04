@@ -28,7 +28,7 @@ export function StoreProvider({children}: PropsWithChildren<any>){
 
     function removeItem(productId: number, quantity: number) {
         if(!basket) return;
-        const items = [...basket.items]; //when use ... operator, that makes a copy of array and store it to the variable
+        const items = [...basket.items]; //when use '...' operator, that makes a copy of array and store it to the variable
         const itemIndex = items.findIndex(i => i.productId === productId);
         if(itemIndex >= 0) {
             items[itemIndex].quantity -= quantity;

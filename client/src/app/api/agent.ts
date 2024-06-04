@@ -6,7 +6,7 @@ import { store } from "../store/configureStore";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500)); //just for demonstrate spinner loading
 
-axios.defaults.baseURL = 'http://localhost:5000/api/';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.withCredentials = true; //permisson for using cookies
 
 const responceBody = (responce: AxiosResponse) => responce.data;
@@ -18,7 +18,7 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(async responce => { //adding async for sleep function
-    await sleep();
+    if (process.env.NODE_ENV === 'development') await sleep();
     const pagination = responce.headers['pagination'];
     if(pagination) {
         responce.data = new PaginatedResponce(responce.data, JSON.parse(pagination));
